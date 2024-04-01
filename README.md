@@ -1,30 +1,40 @@
 # Rahber
 
-3 Personalized Learning Path Generation
+This repository contains files related to the development of a comprehensive educational platform designed to facilitate seamless learning experiences for users. Below is an overview of the main components included in this repository:
 
-Overview
+**Course Dependency Resolution
 
-This Python script generates personalized learning paths based on users' interests, past course engagements, and performance data.
+File: course_dependency_resolution.py
 
-Project Structure
+This Python script implements an algorithm to efficiently resolve course prerequisites on our video course platform. It optimizes course completion time, accommodates parallel course enrollment, and intelligently manages circular dependencies.
 
-The project folder contains the following files:
+In the provided example:
 
-learning_path_generator.py: The Python script for generating personalized learning paths.
-README.md: This README file providing an overview of the project.
-Requirements
+We initialize a new instance of the CoursePlatform class, creating a platform to manage courses and their dependencies.
+We add several courses to the platform using the add_course method. Each course is added with its name, and some courses also include completion times and prerequisites. Here's the breakdown of the courses added:
+"Introduction to Python": A foundational course with a completion time of 5 units.
+"Data Structures and Algorithms": Builds upon "Introduction to Python" with a completion time of 8 units.
+"Machine Learning Fundamentals": Also builds upon "Introduction to Python" with a completion time of 10 units.
+"Deep Learning": Requires completing "Machine Learning Fundamentals" with a completion time of 12 units.
+"Natural Language Processing": Also requires "Machine Learning Fundamentals" with a completion time of 15 units.
+"Advanced Python": Builds upon "Introduction to Python" with a completion time of 6 units.
+We use the get_learning_path method of the platform instance to retrieve the learning path and total completion time for the course "Natural Language Processing". This method calculates the sequence of courses needed to be completed before reaching the target course and returns the total completion time required.
+Finally, we print out the learning path for "Natural Language Processing" and its total completion time to the console.
 
-Python 3.x
-Usage
 
-Ensure you have Python installed.
-Define courses and users in the main function of the script.
-Run the script using Python:
-bash
-Copy code
-python learning_path_generator.py
-The script will generate personalized learning paths for each user based on their interests, past course engagements, and performance data.
-Example
+**Scalable Video Streaming
+
+File: scalable_video_platform_architecture.docx
+
+This document proposes a system architecture for scalable video streaming, ensuring low latency, high availability, and adaptive streaming quality for a diverse global audience. It covers various components such as content ingestion, CDN utilization, load balancing, and security measures.
+
+**Personalized Learning Path Generation
+
+File: learning_path_generator.py
+
+This Python script generates personalized learning paths for users based on their interests, past course engagements, and performance data. It filters courses matching user interests and ensures they have not already completed them, providing a tailored learning experience.
+
+Example provided within code as below
 
 Suppose we have users with different interests, completed courses, and performance metrics:
 
