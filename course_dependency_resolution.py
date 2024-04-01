@@ -19,6 +19,7 @@ class CourseGraph:
         Initialize a CourseGraph object.
         """
         self.graph = defaultdict(lambda: Course(""))
+        self.circular_dependencies = []
 
     def add_course(self, name, completion_time=0, prerequisites=None):
         """
@@ -46,29 +47,70 @@ class CourseGraph:
         """
         self.graph[course_name].prerequisites.add(prerequisite_name)
 
-    def get_prerequisites(self, course_name):
+    def detect_circular_dependencies(self):
         """
-        Get the prerequisites of a course.
-
-        Parameters:
-        - course_name: Name of the course.
-
-        Returns:
-        - Set of prerequisite courses.
+        Detect circular dependencies using depth-first search (DFS).
         """
-        return self.graph[course_name].prerequisites
+        stack = set()
+        visited = set()
+        for course_name in self.graph:
+            if course_name not in visited:
+                if self._dfs(course_name, visited, stack):
+                    return True
+        return False
+
+    def _dfs(self, course_name, visited, stack):
+        """
+        Depth-first search (DFS) to detect circular dependencies.
+        """
+        if course_name in stack:
+            self.circular_dependencies = list(stack) + [course_name]
+            return True
+
+        if course_name in visited:
+            return False
+
+        visited.add(course_name)
+        stack.add(course_name)
+
+        for prerequisite in self.graph[course_name].prerequisites:
+            if self._dfs(prerequisite, visited, stack):
+                return True
+
+        stack.remove(course_name)
+        return False
+
+    def merge_common_time(self):
+        """
+        Merge completion times of courses involved in circular dependencies.
+        """
+        if self.circular_dependencies:
+            common_time = sum(self.graph[course_name].completion_time for course_name in self.circular_dependencies)
+            for course_name in self.circular_dependencies:
+                self.graph[course_name].completion_time = common_time
+
+    def recalculate_completion_times(self):
+        """
+        Recalculate completion times after merging common time.
+        """
+        completion_times = defaultdict(int)
+        for course_name, course in self.graph.items():
+            completion_times[course_name] = course.completion_time
+            for prerequisite in course.prerequisites:
+                completion_times[course_name] += completion_times[prerequisite]
+        return completion_times
 
     def topological_sort(self):
         """
         Perform topological sort to get the learning path and completion times.
-
-        Returns:
-        - Tuple containing the learning path (list of courses) and completion times.
         """
+        if self.detect_circular_dependencies():
+            self.merge_common_time()
+
+        completion_times = self.recalculate_completion_times()
+
         in_degree = defaultdict(int)
-        completion_times = defaultdict(int)
         for course in self.graph.values():
-            completion_times[course.name] = course.completion_time
             for prerequisite in course.prerequisites:
                 in_degree[prerequisite] += 1
 
@@ -80,14 +122,10 @@ class CourseGraph:
             order.append(course_name)
             for prerequisite in self.graph[course_name].prerequisites:
                 in_degree[prerequisite] -= 1
-                completion_times[course_name] += completion_times[prerequisite]
                 if in_degree[prerequisite] == 0:
                     queue.append(prerequisite)
 
-        if len(order) == len(self.graph):
-            return order, completion_times
-        else:
-            raise ValueError("Circular dependencies exist")
+        return order, completion_times
 
 class CoursePlatform:
     def __init__(self):
@@ -137,22 +175,43 @@ class CoursePlatform:
         except ValueError as e:
             print(e)
 
-# demonstraing Usage
+# demonstrating Usage
 def main():
+    # Simple learning path
+    # platform = CoursePlatform()
+
+    # # Adding courses and their dependencies
+    # platform.add_course("Introduction to Python", 5)
+    # platform.add_course("Data Structures and Algorithms", 8, ["Introduction to Python"])
+    # platform.add_course("Machine Learning Fundamentals", 10, ["Introduction to Python"])
+    # platform.add_course("Deep Learning", 12, ["Machine Learning Fundamentals"])
+    # platform.add_course("Natural Language Processing", 15, ["Machine Learning Fundamentals"])
+    # platform.add_course("Advanced Python", 6, ["Introduction to Python"])
+
+    # # Getting learning path for Natural Language Processing
+    # learning_path, total_completion_time = platform.get_learning_path("Natural Language Processing")
+    # if learning_path is not None:
+    #     print("Learning Path for Natural Language Processing:", learning_path)
+    #     print("Total Completion Time:", total_completion_time)
+    
+    # Circular dependency learning path
     platform = CoursePlatform()
 
-    # Adding courses and their dependencies
+    # Adding courses and their dependencies with circular dependency
     platform.add_course("Introduction to Python", 5)
     platform.add_course("Data Structures and Algorithms", 8, ["Introduction to Python"])
     platform.add_course("Machine Learning Fundamentals", 10, ["Introduction to Python"])
-    platform.add_course("Deep Learning", 12, ["Machine Learning Fundamentals"])
+    platform.add_course("Deep Learning", 12, ["Machine Learning Fundamentals", "Data Structures and Algorithms"])  # Circular dependency
     platform.add_course("Natural Language Processing", 15, ["Machine Learning Fundamentals"])
     platform.add_course("Advanced Python", 6, ["Introduction to Python"])
 
-    # Getting learning path for Natural Language Processing
+    # Getting learning path for Deep Learning (which has circular dependency)
     learning_path, total_completion_time = platform.get_learning_path("Natural Language Processing")
     if learning_path is not None:
-        print("Learning Path for Natural Language Processing:", learning_path)
+        print("Total Completion Time:", total_completion_time)
+    
+    learning_path, total_completion_time = platform.get_learning_path("Deep Learning")
+    if learning_path is not None:
         print("Total Completion Time:", total_completion_time)
 
 if __name__ == "__main__":
