@@ -80,7 +80,7 @@ class LearningPathGenerator:
                 recommended_courses.append(course)
         return recommended_courses
 
-# Example usage
+# Demonstrating usage
 def main():
     # Dummy data for courses
     courses = [
