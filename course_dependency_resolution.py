@@ -69,7 +69,8 @@ class CoursePlatform:
             return learning_path[:target_index+1], total_completion_time
         except ValueError as e:
             print(e)
-
+            
+#Example Usage
 def main():
     platform = CoursePlatform()
 
