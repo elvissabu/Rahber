@@ -4,17 +4,20 @@
 
 Overview
 
-This Python script demonstrates a simple algorithm for generating personalized learning paths based on users' interests, past course engagements, and performance data. It includes classes for representing users and courses, as well as a learning path generator.
+This Python script generates personalized learning paths based on users' interests, past course engagements, and performance data.
 
+Project Structure
+
+The project folder contains the following files:
+
+learning_path_generator.py: The Python script for generating personalized learning paths.
+README.md: This README file providing an overview of the project.
 Requirements
 
 Python 3.x
-Installation
-
-Clone or download this repository to your local machine.
-Ensure you have Python installed.
 Usage
 
+Ensure you have Python installed.
 Define courses and users in the main function of the script.
 Run the script using Python:
 bash
