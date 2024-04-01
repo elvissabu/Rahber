@@ -24,7 +24,7 @@ Finally, we print out the learning path for "Natural Language Processing" and it
 
 **Scalable Video Streaming
 
-File: scalable_video_platform_architecture.docx
+File: scalable_video_platform_architecture.pdf
 
 This document proposes a system architecture for scalable video streaming, ensuring low latency, high availability, and adaptive streaming quality for a diverse global audience. It covers various components such as content ingestion, CDN utilization, load balancing, and security measures.
 
